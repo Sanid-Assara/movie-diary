@@ -5,8 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Movie Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" />
   </head>
-  <body>
+  <body class="bg-[#16181e] font-[lato]">
+    <section class="bg-[#21242D]">
+      <div class="h-[123px] max-w-[1120px] m-auto text-[#F9F9F9] relative top-9">
+        <div class="flex justify-between items-center font-semibold text-2xl">
+          <img class="max-w-[70px]" src="img/tmbd-logo.svg" alt="" />
+          <div class="flex justify-evenly w-full mx-16">
+            <p class="hover:cursor-pointer">Home</p>
+            <p class="hover:cursor-pointer">My Journal</p>
+          </div>
+          <div class="flex">
+            <img class="relative left-14" src="img/Search....svg" alt="" />
+            <input
+              class="bg-[#21242D] border-solid border-[#F9F9F9] border-opacity-10 rounded-xl border-[1px] pl-[75px] h-[56px] w-[125px] font-medium text-lg md:w-[200px] lg:w-[537px]"
+              type="text"
+              id="search"
+              name="search"
+              placeholder="Search" />
+          </div>
+        </div>
+      </div>
+    </section>
+
     <script src="main.js"></script>
   </body>
 </html>
