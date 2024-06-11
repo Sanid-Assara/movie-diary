@@ -57,15 +57,19 @@
         <!-- Movie cards cards will be here -->
         <!-- Starting Card 1 -->
         <div
-          class="flex flex-col items-center rounded-lg bg-[#21242D] text-white"
+          id="imdb_id"
+          class="flex flex-col items-center rounded-[18px] bg-[#21242D] text-white"
         >
           <img
             src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2/kOVEVeg59E0wsnXmF9nrh6OmWII.jpg"
             alt="movie name"
-            class="rounded-t-lg w-full"
+            class="rounded-t-[18px] w-full"
           />
           <div class="py-4 px-2">
-            <p class="font-bold text-xl">Star Wars: The Last Jedi</p>
+            <p class="font-bold text-xl line-clamp-2">
+              Star Wars: The Last Jedi The Last Jedi - Star Wars: The Last Jedi
+              The Last Jedi
+            </p>
             <!-- Time and year -->
             <div class="flex justify-between mb-4">
               <span class="text-md">2h 32m</span>
@@ -73,9 +77,12 @@
             </div>
             <!-- Heart, stars and genre -->
             <div class="flex justify-between items-center">
-              <span class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1">
-                <img src="img/heart-icon.svg" alt="" width="16px" />
-              </span>
+              <button
+                id="add-toList"
+                class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
+              >
+                <img src="img/heart-icon.svg" alt="" width="18px" />
+              </button>
               <span class="flex font-semibold text-sm text-center"
                 ><img
                   src="img/star-icon.svg"
@@ -85,7 +92,7 @@
                 />
                 6.8</span
               >
-              <span class="font-semibold text-sm text-right"
+              <span id="genre_id" class="font-semibold text-sm text-right"
                 >Science Fiction</span
               >
             </div>
@@ -94,7 +101,5 @@
         <!-- End of card -->
       </div>
     </section>
-
-    <script src="main.js"></script>
   </body>
 </html>
