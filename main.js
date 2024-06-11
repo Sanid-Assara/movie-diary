@@ -1,5 +1,4 @@
 //------- Serge part -------
-//https://developer.themoviedb.org/reference/search-keyword
 let searchInput = "";
 
 function GetSearchResults(keyword) {
@@ -21,7 +20,6 @@ function ProcessResponse(res) {
   if (!res.ok) throw new Error(res.status);
   return res.json();
 }
-
 //-------
 const searchInputEl = document.getElementById("search");
 const searchFormEl = document.getElementById("search-form");
@@ -42,14 +40,10 @@ function SubmitSearch(event) {
 }
 
 function ProcessSearchResults(data) {
-  //   console.log(data);
   console.log(data.results.length);
-
   const resultsPage = data.results;
-
   clearChildren(cardsContainerEl);
   clearChildren(popularMoviesEl);
-
   for (let i = 0; i < resultsPage.length; i++) {
     ShowSearchResultCardUI(resultsPage[i]);
   }
@@ -61,35 +55,14 @@ function clearChildren(element) {
 
 function ShowSearchResultCardUI(movie) {
   const imageURL = `https://image.tmdb.org/t/p/w94_and_h141_bestv2/${movie.poster_path}`;
-  //   const searchCardMarkup = `
-  //     <div class="flex flex-col items-center rounded-lg bg-[#21242D] text-white">
-  //           <img src="${imageURL}" alt="${movie.title}" class="rounded-t-lg w-full" />
-  //           <div class="py-4 px-2">
-  //             <p class="font-bold text-xl">${movie.title}</p>
-  //             <!-- Time and year -->
-  //             <div class="flex justify-between mb-4">
-  //               <span class="text-md">2h 32m</span>
-  //               <span class="text-md">${movie.release_date}</span>
-  //             </div>
-  //             <!-- Heart, stars and genre -->
-  //             <div class="flex justify-between items-center">
-  //               <span class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1">
-  //                 <img src="img/heart-icon.svg" alt="" width="16px" />
-  //               </span>
-  //               <span class="flex font-semibold text-sm text-center"><img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2" /> 6.8</span>
-  //               <span class="font-semibold text-sm text-right">Science Fiction</span>
-  //             </div>
-  //           </div>
-  //         </div>`;
 
   const searchCardMarkup = `<div class="flex items-stretch bg-[#21242D] text-white">
-          <img class="h-[200px]" src="${imageURL}" alt="${movie.title}" />
+          <img id="search-image" class="h-[200px]" src="${imageURL}" alt="${movie.title}" />
           <div class="px-4 w-full flex flex-col max-h-[180px] m-1">
             <p class="font-bold text-xl sm:max-w-fit">${movie.title}</p>
             <!-- Heart, stars and genre -->
             <div class="flex justify-start gap-6 items-center">
               <p class="text-md">${movie.release_date}</p>
-
               <span class="flex font-semibold text-sm text-center"><img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2" /> ${movie.vote_average.toFixed(1)}</span>
               <span class="font-semibold text-sm text-right">Science Fiction</span>
             </div>
@@ -98,9 +71,19 @@ function ShowSearchResultCardUI(movie) {
             </p>
           </div>`;
 
-  console.log(movie);
+  const movieEl = document.createElement("div");
+  movieEl.innerHTML = searchCardMarkup;
+  const img = movieEl.querySelector("img");
+  img.onerror = () => (img.src = "./img/search-no-image.png");
+  cardsContainerEl.appendChild(movieEl);
+}
 
-  cardsContainerEl.innerHTML += searchCardMarkup;
+function checkImage(source, element) {
+  const image = new Image();
+  image.src = source;
+  image.onerror = function () {
+    element.querySelector("img").src = "./img/search-no-image.png";
+  };
 }
 
 //------- Erika part -------
