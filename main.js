@@ -105,12 +105,4 @@ function ShowSearchResultCardUI(movie) {
   cardsContainerEl.appendChild(movieEl);
 }
 
-function checkImage(source, element) {
-  const image = new Image();
-  image.src = source;
-  image.onerror = function () {
-    element.querySelector("img").src = "./img/search-no-image.png";
-  };
-}
-
 //------- Erika part -------
