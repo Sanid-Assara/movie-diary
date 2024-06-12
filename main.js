@@ -3,6 +3,7 @@ let searchInput = "";
 let movieGenres = [];
 const searchURL = `https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1&query=`;
 const genreURL = `https://api.themoviedb.org/3/genre/movie/list?language=en`;
+const detailsURL = `https://www.themoviedb.org/movie/`;
 
 function GetSearchResults(keyword) {
   const url = `${searchURL}${keyword}`;
@@ -49,7 +50,16 @@ searchFormEl.addEventListener("submit", SubmitSearch);
 GetGenres();
 
 function ProcessSearch(event) {
+  const highlighted = ["bg-[#3ae4de50]", "hover:cursor-pointer"];
+  const searchImg = document.getElementById("search-img");
   searchInput = event.target.value;
+  if (searchInput.length > 0) {
+    searchImg.classList.add(...highlighted);
+    searchImg.onclick = () => GetSearchResults(searchInputEl.value);
+  } else {
+    searchImg.classList.remove(...highlighted);
+    searchImg.onclick = () => null;
+  }
 }
 
 function SubmitSearch(event) {
@@ -58,7 +68,7 @@ function SubmitSearch(event) {
 }
 
 function ProcessSearchResults(data) {
-  // console.log(data.results);
+  console.log(data.results);
   const resultsPage = data.results;
   clearChildren(cardsContainerEl);
   clearChildren(popularMoviesEl);
@@ -78,11 +88,11 @@ function ShowSearchResultCardUI(movie) {
   if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "
 
   const searchCardMarkup = `<div class="flex items-stretch bg-[#21242D] text-white">
-          <img id="search-image" class="h-[200px]"
+          <img id="search-image" class="h-[200px] hover:cursor-pointer"
           src="${imageURL}" 
           alt="${movie.title}" />
           <div class="px-4 w-full flex flex-col max-h-[180px] m-1">
-            <p class="font-bold text-xl sm:max-w-fit text-[#00b9ae]">
+            <p id="search-movie-title" class="font-bold text-xl sm:max-w-fit text-[#00b9ae] hover:cursor-pointer">
             ${movie.title}</p>
             <div class="flex justify-start gap-6 items-center">
               <p class="text-md">
@@ -100,9 +110,15 @@ function ShowSearchResultCardUI(movie) {
 
   const movieEl = document.createElement("div");
   movieEl.innerHTML = searchCardMarkup;
+  movieEl.querySelector("#search-movie-title").onclick = () => openDetails();
   const img = movieEl.querySelector("img");
+  img.onclick = () => openDetails();
   img.onerror = () => (img.src = "./img/search-no-image.png");
   cardsContainerEl.appendChild(movieEl);
+
+  function openDetails() {
+    window.open(detailsURL + movie.id, "_blank");
+  }
 }
 
 //------- Erika part -------
