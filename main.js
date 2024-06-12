@@ -1,12 +1,12 @@
 //------- Serge part -------
 let searchInput = "";
 let movieGenres = [];
-const searchURL = `https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1&query=`;
+const searchURL = `https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&`;
 const genreURL = `https://api.themoviedb.org/3/genre/movie/list?language=en`;
 const detailsURL = `https://www.themoviedb.org/movie/`;
-
-function GetSearchResults(keyword) {
-  const url = `${searchURL}${keyword}`;
+("page=1&query=");
+function GetSearchResults(keyword, page) {
+  const url = `${searchURL}query=${keyword}&page=${page}`;
   fetch(url, {
     method: "GET",
     headers: {
@@ -55,7 +55,7 @@ function ProcessSearch(event) {
   searchInput = event.target.value;
   if (searchInput.length > 0) {
     searchImg.classList.add(...highlighted);
-    searchImg.onclick = () => GetSearchResults(searchInputEl.value);
+    searchImg.onclick = () => GetSearchResults(searchInputEl.value, 1);
   } else {
     searchImg.classList.remove(...highlighted);
     searchImg.onclick = () => null;
@@ -64,16 +64,56 @@ function ProcessSearch(event) {
 
 function SubmitSearch(event) {
   event.preventDefault();
-  GetSearchResults(searchInputEl.value);
+  GetSearchResults(searchInputEl.value, 1);
 }
 
 function ProcessSearchResults(data) {
-  console.log(data.results);
+  // console.log(data);
+  // console.log(data.results);
   const resultsPage = data.results;
   clearChildren(cardsContainerEl);
-  if (popularMoviesEl) clearChildren(popularMoviesEl);
-  for (let i = 0; i < resultsPage.length; i++) {
-    ShowSearchResultCardUI(resultsPage[i]);
+  // if (popularMoviesEl) clearChildren(popularMoviesEl);
+
+  const dialogEl = document.getElementById("search-dialog");
+  // dialogEl.onclick = (e) => {
+  // };
+
+  dialogEl.show();
+  const searchKeyEl = document.getElementById("search-keyword");
+  const searchFoundEl = document.getElementById("search-found");
+  const searchCurPageEl = document.getElementById("search-current-page");
+  const searchTotalPageEl = document.getElementById("search-total-pages");
+  const prevBtn = document.getElementById("search-prev");
+  const nextBtn = document.getElementById("search-next");
+
+  if (data.total_results > 0) {
+    searchKeyEl.innerText = `Search results for: "${searchInput}"`;
+    searchFoundEl.innerText = "Total results: " + data.total_results;
+    searchCurPageEl.innerText = "Current Page: " + data.page;
+    searchTotalPageEl.innerText = "/ " + data.total_pages;
+
+    if (data.total_pages > 1 && data.page < data.total_pages) {
+      nextBtn.classList.remove("hidden");
+      nextBtn.onclick = () => GetSearchResults(searchInputEl.value, data.page + 1);
+    } else nextBtn.classList.add("hidden");
+
+    if (data.page === 1) {
+      prevBtn.classList.add("hidden");
+    } else {
+      prevBtn.classList.remove("hidden");
+      prevBtn.onclick = () => GetSearchResults(searchInputEl.value, data.page - 1);
+    }
+
+    for (let i = 0; i < resultsPage.length; i++) {
+      ShowSearchResultCardUI(resultsPage[i]);
+    }
+  } else {
+    searchKeyEl.innerText = `Search results for: "${searchInput}"`;
+    searchFoundEl.innerText = "Nothing found";
+    searchCurPageEl.innerText = "";
+    searchTotalPageEl.innerText = "";
+    nextBtn.classList.add("hidden");
+    prevBtn.classList.add("hidden");
   }
 }
 
@@ -89,11 +129,11 @@ function ShowSearchResultCardUI(movie) {
 
   const searchCardMarkup = `
   <div class="flex items-stretch bg-[#21242D] text-white relative">
-    <img id="search-image" class="h-[200px] hover:cursor-pointer"
+    <img id="search-image" class="h-[180px] hover:cursor-pointer"
      src="${imageURL}" 
      alt="${movie.title}" />
-    <div class="px-4 w-full flex flex-col max-h-[180px] m-1 justify-evenly">
-      <p id="search-movie-title" class="font-bold text-xl sm:max-w-fit text-[#00b9ae] hover:cursor-pointer">
+    <div class="px-4 w-full flex flex-col max-h-[160px] m-1 justify-evenly">
+      <p id="search-movie-title" class="font-bold text-l sm:max-w-fit text-[#00b9ae] hover:cursor-pointer">
        ${movie.title}</p>
       <div class="flex justify-start gap-6 items-center">
         <p class="text-md">
@@ -121,6 +161,7 @@ function ShowSearchResultCardUI(movie) {
   img.onerror = () => (img.src = "./img/search-no-image.png");
   cardsContainerEl.appendChild(movieEl);
 
+  //add to favorites
   const favBtn = movieEl.querySelector("#search-fav");
   favBtn.onclick = () => {
     if (favBtn.children[1].id == "fav") {
