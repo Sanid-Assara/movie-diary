@@ -58,7 +58,7 @@ function SubmitSearch(event) {
 }
 
 function ProcessSearchResults(data) {
-  console.log(data.results);
+  // console.log(data.results);
   const resultsPage = data.results;
   clearChildren(cardsContainerEl);
   clearChildren(popularMoviesEl);
@@ -72,7 +72,7 @@ function clearChildren(element) {
 }
 
 function ShowSearchResultCardUI(movie) {
-  const imageURL = `https://image.tmdb.org/t/p/w94_and_h141_bestv2/${movie.poster_path}`;
+  const imageURL = `https://image.tmdb.org/t/p/w300/${movie.poster_path}`;
   let genre = "";
   for (let genreId of movie.genre_ids) genre += movieGenres.find((x) => x.id === genreId).name + ", ";
   if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "

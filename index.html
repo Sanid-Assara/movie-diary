@@ -11,7 +11,7 @@
     <script src="main.js" defer></script>
   </head>
   <body class="bg-[#16181e] font-[lato]">
-    <section class="bg-[#21242D]">
+    <header class="bg-[#21242D]">
       <div class="h-[173px] md:h-[123px] max-w-[1120px] m-auto text-[#F9F9F9] relative top-9">
         <div class="flex justify-between items-center font-semibold text-2xl flex-wrap gap-3">
           <img class="max-w-[70px] ml-2 xl:ml-0" src="img/tmbd-logo.svg" alt="" />
@@ -30,7 +30,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </header>
 
     <section class="mx-auto max-w-[1120px] container py-8">
       <div id="search-results" class="grid grid-cols-1 xl:grid-cols-2 gap-2"></div>
@@ -42,21 +42,11 @@
         <!-- Movie cards cards will be here -->
         <!-- Starting Card 1 -->
 
-        <div
-          id="imdb_id"
-          class="flex flex-col items-center rounded-[18px] bg-[#21242D] text-white"
-        >
-          <img
-            src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2/kOVEVeg59E0wsnXmF9nrh6OmWII.jpg"
-            alt="movie name"
-            class="rounded-t-[18px] w-full"
-          />
+        <div id="imdb_id" class="flex flex-col items-center rounded-[18px] bg-[#21242D] text-white">
+          <img src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2/kOVEVeg59E0wsnXmF9nrh6OmWII.jpg" alt="movie name" class="rounded-t-[18px] w-full" />
 
           <div class="py-4 px-2">
-            <p class="font-bold text-xl line-clamp-2">
-              Star Wars: The Last Jedi The Last Jedi - Star Wars: The Last Jedi
-              The Last Jedi
-            </p>
+            <p class="font-bold text-xl line-clamp-2">Star Wars: The Last Jedi The Last Jedi - Star Wars: The Last Jedi The Last Jedi</p>
             <!-- Time and year -->
             <div class="flex justify-between mb-4">
               <span class="text-md">2h 32m</span>
@@ -64,26 +54,11 @@
             </div>
             <!-- Heart, stars and genre -->
             <div class="flex justify-between items-center">
-
-              <button
-                id="add-toList"
-                class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
-              >
+              <button id="add-toList" class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce">
                 <img src="img/heart-icon.svg" alt="" width="18px" />
               </button>
-              <span class="flex font-semibold text-sm text-center"
-                ><img
-                  src="img/star-icon.svg"
-                  alt="star"
-                  width="16px"
-                  class="flex mr-2"
-                />
-                6.8</span
-              >
-              <span id="genre_id" class="font-semibold text-sm text-right"
-                >Science Fiction</span
-              >
-
+              <span class="flex font-semibold text-sm text-center"><img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2" /> 6.8</span>
+              <span id="genre_id" class="font-semibold text-sm text-right">Science Fiction</span>
             </div>
           </div>
         </div>
@@ -94,6 +69,5 @@
       <img class="max-w-[70px] ml-2" src="img/tmbd-logo.svg" alt="Logo" />
       <small class="font-semibold text-lg text-white">&copy; 2024 Movie Diary. All rights reserved.</small>
     </footer>
-
   </body>
 </html>
