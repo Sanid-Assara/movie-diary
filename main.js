@@ -1,8 +1,11 @@
 //------- Serge part -------
 let searchInput = "";
+let movieGenres = [];
+const searchURL = `https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1&query=`;
+const genreURL = `https://api.themoviedb.org/3/genre/movie/list?language=en`;
 
 function GetSearchResults(keyword) {
-  const url = `https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1&query=${keyword}`;
+  const url = `${searchURL}${keyword}`;
   fetch(url, {
     method: "GET",
     headers: {
@@ -13,6 +16,20 @@ function GetSearchResults(keyword) {
   })
     .then((res) => ProcessResponse(res))
     .then((json) => ProcessSearchResults(json))
+    .catch((error) => console.error(error.message));
+}
+
+function GetGenres() {
+  fetch(genreURL, {
+    method: "GET",
+    headers: {
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyOWM5NDUxNTBhYmIyYTY1ZjhkYTliZTYxOGI4MmFmOSIsInN1YiI6IjY2NjZiNDIzOTE0Yjg4OTA3YWU5ZDNjMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-3rLuyFChJ4INeqA33ircOiCiRms_QyOggdAkeJ74N4",
+      Accept: "application/json",
+    },
+  })
+    .then((res) => ProcessResponse(res))
+    .then((json) => (movieGenres = json.genres))
     .catch((error) => console.error(error.message));
 }
 
@@ -29,18 +46,19 @@ const popularMoviesEl = document.getElementById("cards-container");
 searchInputEl.addEventListener("input", ProcessSearch);
 searchFormEl.addEventListener("submit", SubmitSearch);
 
+GetGenres();
+
 function ProcessSearch(event) {
   searchInput = event.target.value;
 }
 
 function SubmitSearch(event) {
   event.preventDefault();
-  console.log(searchInputEl.value);
   GetSearchResults(searchInputEl.value);
 }
 
 function ProcessSearchResults(data) {
-  console.log(data.results.length);
+  console.log(data.results);
   const resultsPage = data.results;
   clearChildren(cardsContainerEl);
   clearChildren(popularMoviesEl);
@@ -55,16 +73,25 @@ function clearChildren(element) {
 
 function ShowSearchResultCardUI(movie) {
   const imageURL = `https://image.tmdb.org/t/p/w94_and_h141_bestv2/${movie.poster_path}`;
+  let genre = "";
+  for (let genreId of movie.genre_ids) genre += movieGenres.find((x) => x.id === genreId).name + ", ";
+  if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "
 
   const searchCardMarkup = `<div class="flex items-stretch bg-[#21242D] text-white">
-          <img id="search-image" class="h-[200px]" src="${imageURL}" alt="${movie.title}" />
+          <img id="search-image" class="h-[200px]"
+          src="${imageURL}" 
+          alt="${movie.title}" />
           <div class="px-4 w-full flex flex-col max-h-[180px] m-1">
-            <p class="font-bold text-xl sm:max-w-fit">${movie.title}</p>
-            <!-- Heart, stars and genre -->
+            <p class="font-bold text-xl sm:max-w-fit text-[#00b9ae]">
+            ${movie.title}</p>
             <div class="flex justify-start gap-6 items-center">
-              <p class="text-md">${movie.release_date}</p>
-              <span class="flex font-semibold text-sm text-center"><img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2" /> ${movie.vote_average.toFixed(1)}</span>
-              <span class="font-semibold text-sm text-right">Science Fiction</span>
+              <p class="text-md">
+              ${movie.release_date.length > 0 ? movie.release_date.slice(0, -6) : ""}</p>
+              <span class="flex font-semibold text-sm text-center">
+              <img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2"/>
+              ${movie.vote_average.toFixed(1)}</span>
+              <span class="font-semibold text-sm text-right italic text-[#00b9ae]">
+              ${genre}</span>
             </div>
             <p id="movie-description" class="text-ellipsis overflow-hidden text-sm mt-2">
               ${movie.overview}
