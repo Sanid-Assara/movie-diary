@@ -55,12 +55,23 @@
       </div>
     </header>
 
-    <section class="mx-auto max-w-[1120px] container py-8">
-      <div
-        id="search-results"
-        class="grid grid-cols-1 xl:grid-cols-2 gap-2"
-      ></div>
-    </section>
+    <dialog close id="search-dialog" class="mx-auto max-w-[1000px] container py-4 bg-[#21242d] text-[white] px-4">
+      <div class="flex justify-between items-center gap-1 mb-4">
+        <div>
+          <p id="search-keyword" class="text-xl">Search results for: "Terminator"</p>
+          <div class="flex gap-1 items-center">
+            <p id="search-found">Found: 450</p>
+            <p id="search-current-page" class="rounded-lg ml-4">Page: 1</p>
+            <p id="search-total-pages" class="ml-0">/ 34</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <button id="search-prev" class="bg-[#00b9ae] px-2 py-2 rounded h-fit text-[#21242d]">Prev Page</button>
+          <button id="search-next" class="bg-[#00b9ae] px-2 py-2 rounded h-fit text-[#21242d]">Next Page</button>
+        </div>
+      </div>
+      <div id="search-results" class="grid grid-cols-1 xl:grid-cols-2 gap-2"></div>
+    </dialog>
 
     <!-- Cards movies Section // Erika -->
     <section class="mx-auto max-w-[1120px] container pb-16">
