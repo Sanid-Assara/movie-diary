@@ -1,30 +1,11 @@
-// This will be deleted, just for testing purposes.
-const favoriteMovies = [
-  { page: 1, number: 1 },
-  { page: 1, number: 2 },
-  { page: 2, number: 4 },
-  { page: 3, number: 10 },
-];
-function saveToLocalStorage(key, array) {
-  // Convert the array to a JSON string
-  const jsonString = JSON.stringify(array);
-  // Store the JSON string in local storage with the provided key
-  localStorage.setItem(key, jsonString);
-}
-saveToLocalStorage("favoriteMovies", favoriteMovies);
-// This will be deleted, just for testing purposes.
+// Retrieve the array of favorite movies from local storage
+const localStorageData = JSON.parse(localStorage.getItem("search-favorites"));
 
-//local Storage
-// Retrieve the array from local storage
-const localStorageData = JSON.parse(localStorage.getItem("favoriteMovies"));
-let numberLocal = localStorageData[2].number;
-let pageNumber = localStorageData[0].page;
+const favoriteMoviesContainer = document.querySelector(
+  "#favorite-movies-container"
+);
 
-//Fetching Part
-const apiKey = "3cfaa214effa89b822afbd22f5852286";
-const baseUrl = "https://api.themoviedb.org/3";
-
-const endpoint = `${baseUrl}/movie/popular?api_key=${apiKey}&language=en-US&page=${pageNumber}`;
+// Function to convert genre id to genre name
 const genres = [
   {
     id: 28,
@@ -103,32 +84,22 @@ const genres = [
     name: "Western",
   },
 ];
-
-// Function to convert genre id to genre name
 function getGenreById(genres, id) {
   const genre = genres.find((genre) => genre.id === id);
   return genre ? genre.name : "Not Specified";
 }
 
-const favoriteMoviesContainer = document.querySelector(
-  "#favorite-movies-container"
-);
-// Function to fetch a favorite movie card
-function fetchFavoriteMovieCard(i) {
-  fetch(endpoint)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok " + response.statusText);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
+//No cards Markup
+const noCardsParagraph = `<p class="text-gray-700 text-lg font-[lato] px-14 py-40 mx-auto text-center">
+  You don't have any favorite movies yet. Start adding some to see them here!
+</p>`;
 
-      const favoriteMoviesCardMarkup = `<div class="flex flex-col rounded-[18px] bg-[#21242D] text-white">
+// Function to generate a card
+function generateCard(i) {
+  const favoriteMoviesCardMarkup = `<div class="movie-card flex flex-col rounded-[18px] bg-[#21242D] text-white">
             <img
               src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${
-                data.results[i].poster_path
+                localStorageData[i].poster_path
               }
               "
               alt="movie name"
@@ -137,13 +108,13 @@ function fetchFavoriteMovieCard(i) {
 
             <div class="py-4 px-2">
               <p class="font-bold text-xl line-clamp-1 mb-2">
-              ${data.results[i].title}
+              ${localStorageData[i].title}
               </p>
               <!-- Year + Rating -->
               <div class="flex items-center justify-between mb-4">
                 <span class="text-md">${
-                  data.results[i].release_date.length > 0
-                    ? data.results[i].release_date.slice(0, -6)
+                  localStorageData[i].release_date.length > 0
+                    ? localStorageData[i].release_date.slice(0, -6)
                     : ""
                 }</span>
                 <span
@@ -155,21 +126,21 @@ function fetchFavoriteMovieCard(i) {
                     width="16px"
                     class="flex mr-2"
                   />
-                  ${data.results[i].vote_average.toFixed(1)}
+                  ${localStorageData[i].vote_average.toFixed(1)}
                 </span>
               </div>
               <!-- Add to List Button + Genre -->
               <div class="flex justify-between items-center">
                 <button
-                  id="add-toList"
-                  class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
+                  id=${i}
+                  class="heart-button-filled bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
                 >
                   <img src="img/heart-icon-selected.svg" alt="" width="18px" />
                 </button>
 
                 <span class="font-semibold text-sm text-right">${getGenreById(
                   genres,
-                  data.results[i].genre_ids[0]
+                  localStorageData[i].genre_ids[0]
                 )}</span>
               </div>
             </div>
@@ -186,21 +157,54 @@ function fetchFavoriteMovieCard(i) {
             </div>
           </div>`;
 
-      favoriteMoviesContainer.insertAdjacentHTML(
-        "beforeend",
-        favoriteMoviesCardMarkup
-      );
-    })
-    .catch((error) => {
-      console.error(
-        "There has been a problem with your fetch operation:",
-        error
-      );
-    });
+  favoriteMoviesContainer.insertAdjacentHTML(
+    "beforeend",
+    favoriteMoviesCardMarkup
+  );
 }
 
-// for (let i = 0; i < 20; i++) {
-//   fetchFavoriteMovieCard(i);
-// }
+// Loop over the localStorage array
+if (localStorageData.length === 0) {
+  favoriteMoviesContainer.insertAdjacentHTML("beforeend", noCardsParagraph);
+  favoriteMoviesContainer.className = "";
+  favoriteMoviesContainer.classList.add(
+    "flex",
+    "items-center",
+    "justify-center"
+  );
+} else {
+  for (let i = 0; i < localStorageData.length; i++) {
+    generateCard(i);
+  }
+}
 
-fetchFavoriteMovieCard(numberLocal);
+// Function to handle heart button click
+function handleHeartButtonClick(event) {
+  const button = event.currentTarget;
+  const movieCard = button.closest(".movie-card");
+  const index = parseInt(movieCard.getAttribute("data-index"), 10);
+
+  // Remove the movie from local storage data
+  localStorageData.splice(index, 1);
+
+  // Update local storage
+  localStorage.setItem("search-favorites", JSON.stringify(localStorageData));
+
+  // Remove the movie card from the DOM
+  favoriteMoviesContainer.removeChild(movieCard);
+
+  // Update the indices of the remaining movie cards
+  document.querySelectorAll(".movie-card").forEach((card, i) => {
+    card.setAttribute("data-index", i);
+  });
+  // Reload the page if the localStorage is empty
+  if (localStorageData.length === 0) {
+    window.location.reload();
+  }
+}
+
+// Attach event listeners to heart buttons
+const heartButtons = document.querySelectorAll(".heart-button-filled");
+heartButtons.forEach((button) => {
+  button.addEventListener("click", handleHeartButtonClick);
+});
