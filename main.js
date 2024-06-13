@@ -109,14 +109,16 @@ function ProcessSearchResults(data) {
 
     if (data.total_pages > 1 && data.page < data.total_pages) {
       nextBtn.classList.remove("hidden");
-      nextBtn.onclick = () => GetSearchResults(searchInputEl.value, data.page + 1);
+      nextBtn.onclick = () =>
+        GetSearchResults(searchInputEl.value, data.page + 1);
     } else nextBtn.classList.add("hidden");
 
     if (data.page === 1) {
       prevBtn.classList.add("hidden");
     } else {
       prevBtn.classList.remove("hidden");
-      prevBtn.onclick = () => GetSearchResults(searchInputEl.value, data.page - 1);
+      prevBtn.onclick = () =>
+        GetSearchResults(searchInputEl.value, data.page - 1);
     }
 
     for (let i = 0; i < resultsPage.length; i++) {
@@ -133,13 +135,15 @@ function ProcessSearchResults(data) {
 }
 
 function clearChildren(element) {
-  while (element.lastElementChild) element.removeChild(element.lastElementChild);
+  while (element.lastElementChild)
+    element.removeChild(element.lastElementChild);
 }
 
 function ShowSearchResultCardUI(movie) {
   const imageURL = `https://image.tmdb.org/t/p/w300/${movie.poster_path}`;
   let genre = "";
-  for (let genreId of movie.genre_ids) genre += movieGenres.find((x) => x.id === genreId).name + ", ";
+  for (let genreId of movie.genre_ids)
+    genre += movieGenres.find((x) => x.id === genreId).name + ", ";
   if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "
 
   const searchCardMarkup = `
@@ -152,7 +156,9 @@ function ShowSearchResultCardUI(movie) {
        ${movie.title}</p>
       <div class="flex justify-start gap-6 items-center">
         <p class="text-md">
-         ${movie.release_date.length > 0 ? movie.release_date.slice(0, -6) : ""}</p>
+         ${
+           movie.release_date.length > 0 ? movie.release_date.slice(0, -6) : ""
+         }</p>
         <span class="flex font-semibold text-sm text-center">
         <img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2"/>
          ${movie.vote_average.toFixed(1)}</span>
@@ -229,7 +235,8 @@ window.addEventListener("load", async () => {
 
 function cardUI(movie) {
   const imageURL = `https://image.tmdb.org/t/p//w300_and_h450_bestv2/`;
-  // const genre = "";
+  const detailsURL = `https://www.themoviedb.org/movie/`;
+
   // console.log(movie);
 
   let genre = "";
@@ -240,12 +247,16 @@ function cardUI(movie) {
 
   const card = `
   <div class="flex flex-col rounded-[18px] bg-[#21242D] text-white">
-      <img
-      src="${imageURL}${movie.poster_path}"
-      alt="movie name"
-      class="rounded-t-[18px] w-full"/>
+      <a href="${detailsURL}${movie.id}" target="_blank">
+        <img class="rounded-t-[18px] w-full"
+        src="${imageURL}${movie.poster_path}"
+        alt="${movie.title}"
+        />
+      </a>
       <div class="py-4 px-2">
-        <p class="font-bold text-xl line-clamp-1 mb-2">${movie.title}</p>
+        <p id="movie-title" class="font-bold text-xl line-clamp-1 mb-2">${
+          movie.title
+        }</p>
         <div class="flex justify-between mb-4">
           <span class="text-md">
             ${
@@ -259,8 +270,8 @@ function cardUI(movie) {
             ${movie.vote_average.toFixed(1)}
           </span>
         </div>
-        <div class="flex justify-between items-center" id="add-toList">
-        <button class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:cursor-pointer">
+        <div class="flex justify-between items-center">
+        <button id="add-toList" class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:cursor-pointer">
           <img src="img/heart-icon.svg" alt="" width="18px" />
         </button>
         <span class="font-semibold text-sm text-right text-[#00b9ae]">
@@ -272,4 +283,36 @@ function cardUI(movie) {
   `;
 
   popularMoviesEl.insertAdjacentHTML("beforeend", card);
+
+  const cardDiv = document.createElement("div");
+  cardDiv.innerHTML = card;
+
+  const poster = cardDiv.querySelector("img");
+  const toList = cardDiv.querySelector("button");
+  // console.log(toList.children[0]);
+
+  cardsContainerEl.appendChild(cardDiv); // to insert inside carDiv the variable card from the top
+
+  toList.onclick = () => {
+    toList.classList.remove("bg-[#00B9AE]"); // Remove mystyle class
+    toList.classList.add("bg-emerald-100"); // Add newone class
+  };
 }
+
+// favBtn.onclick = () => {
+//   if (favBtn.children[1].id == "fav") {
+//     favBtn.children[1].src = "./img/heart-icon.svg";
+//     favBtn.children[1].id = "";
+//   } else {
+//     favBtn.children[1].src = "./img/heart-icon-selected.svg";
+//     favBtn.children[1].id = "fav";
+//   }
+// };
+
+// // Add product to localStorage
+// export function addToList(movie, key) {
+//   // if there no items then assign an empty array to the variable
+//   const movies = JSON.parse(localStorage.getItem(key)) || [];
+//   movies.push(movie);
+//   localStorage.setItem(key, JSON.stringify(movie));
+// }
