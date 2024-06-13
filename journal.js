@@ -134,11 +134,23 @@ function generateCard(i) {
               <!-- Add to List Button + Genre -->
               <div class="flex justify-between items-center min-h-10">
                 <button
-                  id=${i}
-                  class="heart-button-filled bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
-                >
-                  <img src="img/heart-icon-selected.svg" alt="" width="18px" />
-                </button>
+                id="${i}"
+                class="heart-button-filled group bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
+              >
+                <!-- Default Icon -->
+                <img
+                  src="./img/heart-icon-selected.svg"
+                  alt="Default Icon"
+                  class="block group-hover:hidden"
+                />
+
+                <!-- Hover Icon -->
+                <img
+                  src="./img/heart-icon.svg"
+                  alt="Hover Icon"
+                  class="hidden group-hover:block"
+                />
+              </button>
 
                 <span class="font-semibold text-sm text-right  text-[#00b9ae] max-w-44">${getGenreByIds(
                   genres,
