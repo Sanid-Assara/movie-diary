@@ -1,6 +1,29 @@
+// This will be deleted, just for testing purposes.
+const favoriteMovies = [
+  { page: 1, number: 1 },
+  { page: 1, number: 2 },
+  { page: 2, number: 4 },
+  { page: 3, number: 10 },
+];
+function saveToLocalStorage(key, array) {
+  // Convert the array to a JSON string
+  const jsonString = JSON.stringify(array);
+  // Store the JSON string in local storage with the provided key
+  localStorage.setItem(key, jsonString);
+}
+saveToLocalStorage("favoriteMovies", favoriteMovies);
+// This will be deleted, just for testing purposes.
+
+//local Storage
+// Retrieve the array from local storage
+const localStorageData = JSON.parse(localStorage.getItem("favoriteMovies"));
+let numberLocal = localStorageData[2].number;
+let pageNumber = localStorageData[0].page;
+
+//Fetching Part
 const apiKey = "3cfaa214effa89b822afbd22f5852286";
 const baseUrl = "https://api.themoviedb.org/3";
-let pageNumber = 1;
+
 const endpoint = `${baseUrl}/movie/popular?api_key=${apiKey}&language=en-US&page=${pageNumber}`;
 const genres = [
   {
@@ -80,11 +103,6 @@ const genres = [
     name: "Western",
   },
 ];
-
-// Retrieve the array from local storage
-const localStorageData = JSON.parse(localStorage.getItem("favoriteMovies"));
-let pageLocal = localStorageData[0].page;
-let numberLocal = localStorageData[2].number;
 
 // Function to convert genre id to genre name
 function getGenreById(genres, id) {
@@ -186,21 +204,3 @@ function fetchFavoriteMovieCard(i) {
 // }
 
 fetchFavoriteMovieCard(numberLocal);
-
-//local Storage
-
-const favoriteMovies = [
-  { page: 1, number: 1 },
-  { page: 1, number: 2 },
-  { page: 1, number: 4 },
-  { page: 2, number: 10 },
-];
-
-function saveToLocalStorage(key, array) {
-  // Convert the array to a JSON string
-  const jsonString = JSON.stringify(array);
-  // Store the JSON string in local storage with the provided key
-  localStorage.setItem(key, jsonString);
-}
-
-saveToLocalStorage("favoriteMovies", favoriteMovies);
