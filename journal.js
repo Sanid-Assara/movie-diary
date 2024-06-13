@@ -1,5 +1,7 @@
 // Retrieve the array of favorite movies from local storage
-const localStorageData = JSON.parse(localStorage.getItem("search-favorites"));
+
+const localStorageData =
+  JSON.parse(localStorage.getItem("search-favorites")) || [];
 
 const favoriteMoviesContainer = document.querySelector(
   "#favorite-movies-container"
@@ -177,8 +179,7 @@ function generateCard(i) {
   );
 }
 
-// Loop over the localStorage array
-if (localStorageData.length === 0) {
+function displayNoCards() {
   favoriteMoviesContainer.insertAdjacentHTML("beforeend", noCardsParagraph);
   favoriteMoviesContainer.className = "";
   favoriteMoviesContainer.classList.add(
@@ -186,12 +187,18 @@ if (localStorageData.length === 0) {
     "items-center",
     "justify-center"
   );
-} else {
+}
+
+if (localStorageData.length === 0) {
+  displayNoCards();
+} else if (localStorageData.length > 0) {
+  // Loop over the localStorage array
   for (let i = 0; i < localStorageData.length; i++) {
     generateCard(i);
   }
 }
 
+console.log(localStorageData.length);
 // Function to handle heart button click
 function handleHeartButtonClick(event) {
   const button = event.currentTarget;
