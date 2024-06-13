@@ -1,5 +1,6 @@
 // Retrieve the array of favorite movies from local storage
 const localStorageData = JSON.parse(localStorage.getItem("search-favorites"));
+
 const favoriteMoviesContainer = document.querySelector(
   "#favorite-movies-container"
 );
@@ -90,6 +91,11 @@ function getGenreById(genres, id) {
   return genre ? genre.name : "Not Specified";
 }
 
+//No cards Markup
+const noCardsParagraph = `<p class="text-gray-700 text-lg font-[lato] px-14 py-40 mx-auto text-center">
+  You don't have any favorite movies yet. Start adding some to see them here!
+</p>`;
+
 // Function to generate a card
 function generateCard(i) {
   const favoriteMoviesCardMarkup = `<div class="movie-card flex flex-col rounded-[18px] bg-[#21242D] text-white">
@@ -160,8 +166,18 @@ function generateCard(i) {
 }
 
 // Loop over the localStorage array
-for (let i = 0; i < localStorageData.length; i++) {
-  generateCard(i);
+if (localStorageData.length === 0) {
+  favoriteMoviesContainer.insertAdjacentHTML("beforeend", noCardsParagraph);
+  favoriteMoviesContainer.className = "";
+  favoriteMoviesContainer.classList.add(
+    "flex",
+    "items-center",
+    "justify-center"
+  );
+} else {
+  for (let i = 0; i < localStorageData.length; i++) {
+    generateCard(i);
+  }
 }
 
 // Function to handle heart button click
@@ -183,6 +199,10 @@ function handleHeartButtonClick(event) {
   document.querySelectorAll(".movie-card").forEach((card, i) => {
     card.setAttribute("data-index", i);
   });
+  // Reload the page if the localStorage is empty
+  if (localStorageData.length === 0) {
+    window.location.reload();
+  }
 }
 
 // Attach event listeners to heart buttons
