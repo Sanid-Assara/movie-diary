@@ -38,14 +38,30 @@ function ProcessResponse(res) {
   if (!res.ok) throw new Error(res.status);
   return res.json();
 }
+
+//Find a parent element from child element
+function FindParentElement(elementToFind, startingElement) {
+  let currentElement = startingElement;
+  if (currentElement == elementToFind) return true;
+  while (currentElement.parentElement) {
+    currentElement = currentElement.parentElement;
+    if (currentElement == elementToFind) return true;
+  }
+  return false;
+}
 //-----------------------------
 const searchInputEl = document.getElementById("search");
 const searchFormEl = document.getElementById("search-form");
 const cardsContainerEl = document.getElementById("search-results");
 const popularMoviesEl = document.getElementById("cards-container");
+const dialogEl = document.getElementById("search-dialog");
 
 searchInputEl.addEventListener("input", ProcessSearch);
 searchFormEl.addEventListener("submit", SubmitSearch);
+
+document.onclick = (e) => {
+  if (!FindParentElement(dialogEl, e.target) && dialogEl.open) dialogEl.close();
+};
 
 GetGenres();
 //------------------------------
@@ -68,15 +84,8 @@ function SubmitSearch(event) {
 }
 
 function ProcessSearchResults(data) {
-  // console.log(data);
-  // console.log(data.results);
   const resultsPage = data.results;
   clearChildren(cardsContainerEl);
-  // if (popularMoviesEl) clearChildren(popularMoviesEl);
-
-  const dialogEl = document.getElementById("search-dialog");
-  // dialogEl.onclick = (e) => {
-  // };
 
   dialogEl.show();
   const searchKeyEl = document.getElementById("search-keyword");
@@ -89,8 +98,14 @@ function ProcessSearchResults(data) {
   if (data.total_results > 0) {
     searchKeyEl.innerText = `Search results for: "${searchInput}"`;
     searchFoundEl.innerText = "Total results: " + data.total_results;
-    searchCurPageEl.innerText = "Current Page: " + data.page;
-    searchTotalPageEl.innerText = "/ " + data.total_pages;
+
+    if (data.total_pages > 1) {
+      searchCurPageEl.innerText = "Current Page: " + data.page;
+      searchTotalPageEl.innerText = "/ " + data.total_pages;
+    } else {
+      searchCurPageEl.innerText = "";
+      searchTotalPageEl.innerText = "";
+    }
 
     if (data.total_pages > 1 && data.page < data.total_pages) {
       nextBtn.classList.remove("hidden");
@@ -118,15 +133,13 @@ function ProcessSearchResults(data) {
 }
 
 function clearChildren(element) {
-  while (element.lastElementChild)
-    element.removeChild(element.lastElementChild);
+  while (element.lastElementChild) element.removeChild(element.lastElementChild);
 }
 
 function ShowSearchResultCardUI(movie) {
   const imageURL = `https://image.tmdb.org/t/p/w300/${movie.poster_path}`;
   let genre = "";
-  for (let genreId of movie.genre_ids)
-    genre += movieGenres.find((x) => x.id === genreId).name + ", ";
+  for (let genreId of movie.genre_ids) genre += movieGenres.find((x) => x.id === genreId).name + ", ";
   if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "
 
   const searchCardMarkup = `
@@ -139,9 +152,7 @@ function ShowSearchResultCardUI(movie) {
        ${movie.title}</p>
       <div class="flex justify-start gap-6 items-center">
         <p class="text-md">
-         ${
-           movie.release_date.length > 0 ? movie.release_date.slice(0, -6) : ""
-         }</p>
+         ${movie.release_date.length > 0 ? movie.release_date.slice(0, -6) : ""}</p>
         <span class="flex font-semibold text-sm text-center">
         <img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2"/>
          ${movie.vote_average.toFixed(1)}</span>
@@ -214,16 +225,10 @@ function fetchPopuplar(i) {
       class="rounded-t-[18px] w-full"/>
 
     <div class="py-4 px-2">
-      <p class="font-bold text-xl line-clamp-1 mb-2">${
-        data.results[i].title
-      }</p>
+      <p class="font-bold text-xl line-clamp-1 mb-2">${data.results[i].title}</p>
       <div class="flex justify-between mb-4">
         <span class="text-md">
-          ${
-            data.results[i].release_date.length > 0
-              ? data.results[i].release_date.slice(0, -6)
-              : ""
-          }
+          ${data.results[i].release_date.length > 0 ? data.results[i].release_date.slice(0, -6) : ""}
         </span>
         <span class="flex font-semibold text-sm text-center">
           <img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2"/>
