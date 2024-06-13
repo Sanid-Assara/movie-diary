@@ -130,7 +130,7 @@ function ProcessSearchResults(data) {
     searchFoundEl.innerText = "Total results: " + data.total_results;
 
     if (data.total_pages > 1) {
-      searchCurPageEl.innerText = "Current Page: " + data.page;
+      searchCurPageEl.innerText = "Page: " + data.page;
       searchTotalPageEl.innerText = "/ " + data.total_pages;
     } else {
       searchCurPageEl.innerText = "";
@@ -178,7 +178,7 @@ function ShowSearchResultCardUI(movie) {
 
   const searchCardMarkup = `
   <div class="flex items-stretch bg-[#21242D] text-white relative">
-    <img id="search-image" class="h-[180px] hover:cursor-pointer"
+    <img id="search-image" class="h-[180px] w-[120px] object-cover hover:cursor-pointer"
      src="${imageURL}" 
      alt="${movie.title}" />
     <div class="px-4 w-full flex flex-col max-h-[160px] m-1 justify-evenly">
@@ -284,8 +284,7 @@ function cardUI(movie) {
   // console.log(movie);
 
   let genre = "";
-  for (let genreId of movie.genre_ids)
-    genre += movieGenres.find((x) => x.id === genreId).name + ", ";
+  for (let genreId of movie.genre_ids) genre += movieGenres.find((x) => x.id === genreId).name + ", ";
   // console.log(genre);
   if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "
 
@@ -302,11 +301,7 @@ function cardUI(movie) {
         }</p>
         <div class="flex justify-between mb-4">
           <span class="text-md">
-            ${
-              movie.release_date.length > 0
-                ? movie.release_date.slice(0, -6)
-                : ""
-            }
+            ${movie.release_date.length > 0 ? movie.release_date.slice(0, -6) : ""}
           </span>
           <span class="flex font-semibold text-sm text-center">
             <img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2"/>
