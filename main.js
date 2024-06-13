@@ -196,9 +196,8 @@ function ShowSearchResultCardUI(movie) {
 //------- Erika part -------
 
 const popUrl = `https://api.themoviedb.org/3/movie/popular?language=en-US&page=1`;
-function fetchPopuplar(i) {
-  const imageURL = `https://image.tmdb.org/t/p//w300_and_h450_bestv2/`;
 
+async function fetchItems(popUrl) {
   const options = {
     method: "GET",
     headers: {
@@ -208,57 +207,69 @@ function fetchPopuplar(i) {
     },
   };
 
-  fetch(`${popUrl}`, options)
-    .then((response) => {
-      if (!response.ok) throw new Error("Fetching failed");
-      return response.json();
-    })
-    .then((data) => {
-      // console.log(data.results);
+  try {
+    const response = await fetch(`${popUrl}`, options);
+    const movies = await response.json();
+    // console.log(movies);
 
-      // Card markup
-      const card = `
-  <div class="flex flex-col rounded-[18px] bg-[#21242D] text-white">
-    <img
-      src="${imageURL}${data.results[i].poster_path}"
-      alt="movie name"
-      class="rounded-t-[18px] w-full"/>
-
-    <div class="py-4 px-2">
-      <p class="font-bold text-xl line-clamp-1 mb-2">${data.results[i].title}</p>
-      <div class="flex justify-between mb-4">
-        <span class="text-md">
-          ${data.results[i].release_date.length > 0 ? data.results[i].release_date.slice(0, -6) : ""}
-        </span>
-        <span class="flex font-semibold text-sm text-center">
-          <img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2"/>
-          ${data.results[i].vote_average.toFixed(1)}
-        </span>
-      </div>
-
-      <div class="flex justify-between items-center">
-        <button
-          id="add-toList"
-          class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
-        >
-          <img src="img/heart-icon.svg" alt="" width="18px" />
-        </button>
-
-        <span class="font-semibold text-sm text-right">
-        Action
-        </span>
-      </div>
-    </div>
-  </div>
-
-  `;
-      // console.log(data.results[0]);
-      // Display new Mark up
-      popularMoviesEl.insertAdjacentHTML("beforeend", card);
-    })
-    .catch((err) => console.error(err));
+    return movies;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-for (let i = 0; i < 20; i++) {
-  fetchPopuplar(i);
+window.addEventListener("load", async () => {
+  const movies = await fetchItems(popUrl);
+  const popularMovies = movies.results;
+  // console.log(popularMovies);
+  popularMovies.forEach((movie) => {
+    cardUI(movie);
+  });
+});
+
+function cardUI(movie) {
+  const imageURL = `https://image.tmdb.org/t/p//w300_and_h450_bestv2/`;
+  // const genre = "";
+  // console.log(movie);
+
+  let genre = "";
+  for (let genreId of movie.genre_ids)
+    genre += movieGenres.find((x) => x.id === genreId).name + ", ";
+  // console.log(genre);
+  if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "
+
+  const card = `
+  <div class="flex flex-col rounded-[18px] bg-[#21242D] text-white">
+      <img
+      src="${imageURL}${movie.poster_path}"
+      alt="movie name"
+      class="rounded-t-[18px] w-full"/>
+      <div class="py-4 px-2">
+        <p class="font-bold text-xl line-clamp-1 mb-2">${movie.title}</p>
+        <div class="flex justify-between mb-4">
+          <span class="text-md">
+            ${
+              movie.release_date.length > 0
+                ? movie.release_date.slice(0, -6)
+                : ""
+            }
+          </span>
+          <span class="flex font-semibold text-sm text-center">
+            <img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2"/>
+            ${movie.vote_average.toFixed(1)}
+          </span>
+        </div>
+        <div class="flex justify-between items-center" id="add-toList">
+        <button class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:cursor-pointer">
+          <img src="img/heart-icon.svg" alt="" width="18px" />
+        </button>
+        <span class="font-semibold text-sm text-right text-[#00b9ae]">
+        ${genre}
+        </span>
+      </div>
+      </div>
+  </div>
+  `;
+
+  popularMoviesEl.insertAdjacentHTML("beforeend", card);
 }
