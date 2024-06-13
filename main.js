@@ -28,6 +28,7 @@ window.addEventListener("load", () => (favorites = JSON.parse(localStorage.getIt
 
 function AddToFavoritesStorage(movie) {
   if (favorites.includes(movie)) return;
+
   favorites.push(movie);
   localStorage.setItem(favKey, JSON.stringify(favorites));
 }
