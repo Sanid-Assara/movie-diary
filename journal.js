@@ -5,8 +5,6 @@ const favoriteMoviesContainer = document.querySelector(
   "#favorite-movies-container"
 );
 
-// console.log(localStorageData);
-
 // Function to convert genre id to genre name
 const genres = [
   {
