@@ -1,6 +1,6 @@
 const apiKey = "3cfaa214effa89b822afbd22f5852286";
 const baseUrl = "https://api.themoviedb.org/3";
-let pageNumber = 24;
+let pageNumber = 1;
 const endpoint = `${baseUrl}/movie/popular?api_key=${apiKey}&language=en-US&page=${pageNumber}`;
 const genres = [
   {
@@ -81,6 +81,11 @@ const genres = [
   },
 ];
 
+// Retrieve the array from local storage
+const localStorageData = JSON.parse(localStorage.getItem("favoriteMovies"));
+let pageLocal = localStorageData[0].page;
+let numberLocal = localStorageData[2].number;
+
 // Function to convert genre id to genre name
 function getGenreById(genres, id) {
   const genre = genres.find((genre) => genre.id === id);
@@ -101,6 +106,7 @@ function fetchFavoriteMovieCard(i) {
     })
     .then((data) => {
       console.log(data);
+
       const favoriteMoviesCardMarkup = `<div class="flex flex-col rounded-[18px] bg-[#21242D] text-white">
             <img
               src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${
@@ -175,8 +181,26 @@ function fetchFavoriteMovieCard(i) {
     });
 }
 
-for (let i = 0; i < 20; i++) {
-  fetchFavoriteMovieCard(i);
-}
+// for (let i = 0; i < 20; i++) {
+//   fetchFavoriteMovieCard(i);
+// }
+
+fetchFavoriteMovieCard(numberLocal);
 
 //local Storage
+
+const favoriteMovies = [
+  { page: 1, number: 1 },
+  { page: 1, number: 2 },
+  { page: 1, number: 4 },
+  { page: 2, number: 10 },
+];
+
+function saveToLocalStorage(key, array) {
+  // Convert the array to a JSON string
+  const jsonString = JSON.stringify(array);
+  // Store the JSON string in local storage with the provided key
+  localStorage.setItem(key, jsonString);
+}
+
+saveToLocalStorage("favoriteMovies", favoriteMovies);
