@@ -5,7 +5,7 @@ const favoriteMoviesContainer = document.querySelector(
   "#favorite-movies-container"
 );
 
-// Function to convert genre id to genre name
+// Function to convert genre ids to genre name
 const genres = [
   {
     id: 28,
@@ -84,9 +84,11 @@ const genres = [
     name: "Western",
   },
 ];
-function getGenreById(genres, id) {
-  const genre = genres.find((genre) => genre.id === id);
-  return genre ? genre.name : "Not Specified";
+function getGenreByIds(genres, ids) {
+  return genres
+    .filter((genre) => ids.includes(genre.id))
+    .map((genre) => genre.name)
+    .join(", ");
 }
 
 //No cards Markup
@@ -115,7 +117,7 @@ function generateCard(i) {
                 <span class="text-md">${
                   localStorageData[i].release_date.length > 0
                     ? localStorageData[i].release_date.slice(0, -6)
-                    : ""
+                    : "Unknown"
                 }</span>
                 <span
                   class="flex items-center font-semibold text-sm text-center"
@@ -138,9 +140,9 @@ function generateCard(i) {
                   <img src="img/heart-icon-selected.svg" alt="" width="18px" />
                 </button>
 
-                <span class="font-semibold text-sm text-right">${getGenreById(
+                <span class="font-semibold text-sm text-right  text-[#00b9ae]">${getGenreByIds(
                   genres,
-                  localStorageData[i].genre_ids[0]
+                  localStorageData[i].genre_ids
                 )}</span>
               </div>
             </div>
