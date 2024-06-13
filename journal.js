@@ -132,7 +132,7 @@ function generateCard(i) {
                 </span>
               </div>
               <!-- Add to List Button + Genre -->
-              <div class="flex justify-between items-center">
+              <div class="flex justify-between items-center min-h-10">
                 <button
                   id=${i}
                   class="heart-button-filled bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
@@ -140,7 +140,7 @@ function generateCard(i) {
                   <img src="img/heart-icon-selected.svg" alt="" width="18px" />
                 </button>
 
-                <span class="font-semibold text-sm text-right  text-[#00b9ae]">${getGenreByIds(
+                <span class="font-semibold text-sm text-right  text-[#00b9ae] max-w-44">${getGenreByIds(
                   genres,
                   localStorageData[i].genre_ids
                 )}</span>
