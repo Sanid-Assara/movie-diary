@@ -5,6 +5,48 @@ const searchURL = `https://api.themoviedb.org/3/search/movie?include_adult=false
 const genreURL = `https://api.themoviedb.org/3/genre/movie/list?language=en`;
 const detailsURL = `https://www.themoviedb.org/movie/`;
 ("page=1&query=");
+
+const searchInputEl = document.getElementById("search");
+const searchFormEl = document.getElementById("search-form");
+const cardsContainerEl = document.getElementById("search-results");
+const popularMoviesEl = document.getElementById("cards-container");
+const dialogEl = document.getElementById("search-dialog");
+
+searchInputEl.addEventListener("input", ProcessSearch);
+searchFormEl.addEventListener("submit", SubmitSearch);
+
+document.onclick = (e) => {
+  if (!FindParentElement(dialogEl, e.target) && dialogEl.open) dialogEl.close();
+};
+
+GetGenres();
+
+// ----Adding and Removing from Favorites using LocalStorage
+let favorites = [];
+const favKey = "search-favorites";
+window.addEventListener("load", () => (favorites = JSON.parse(localStorage.getItem(favKey)) || []));
+
+function AddToFavoritesStorage(movie) {
+  if (favorites.includes(movie)) return;
+
+  favorites.push(movie);
+  localStorage.setItem(favKey, JSON.stringify(favorites));
+}
+
+function RemoveFromFavoritesStorage(movie) {
+  for (let i = 0; i < favorites.length; i++) {
+    if (favorites[i].id == movie.id) {
+      favorites.splice(i, 1);
+      localStorage.setItem(favKey, JSON.stringify(favorites));
+    }
+  }
+}
+
+function IsFavorite(movie) {
+  if (favorites.find((x) => x.id === movie.id)) return true;
+  return false;
+}
+//--------------------------------------------------
 function GetSearchResults(keyword, page) {
   const url = `${searchURL}query=${keyword}&page=${page}`;
   fetch(url, {
@@ -49,22 +91,7 @@ function FindParentElement(elementToFind, startingElement) {
   }
   return false;
 }
-//-----------------------------
-const searchInputEl = document.getElementById("search");
-const searchFormEl = document.getElementById("search-form");
-const cardsContainerEl = document.getElementById("search-results");
-const popularMoviesEl = document.getElementById("cards-container");
-const dialogEl = document.getElementById("search-dialog");
 
-searchInputEl.addEventListener("input", ProcessSearch);
-searchFormEl.addEventListener("submit", SubmitSearch);
-
-document.onclick = (e) => {
-  if (!FindParentElement(dialogEl, e.target) && dialogEl.open) dialogEl.close();
-};
-
-GetGenres();
-//------------------------------
 function ProcessSearch(event) {
   const highlighted = ["bg-[#3ae4de50]", "hover:cursor-pointer"];
   const searchImg = document.getElementById("search-img");
@@ -184,15 +211,29 @@ function ShowSearchResultCardUI(movie) {
 
   //add to favorites
   const favBtn = movieEl.querySelector("#search-fav");
+
+  if (IsFavorite(movie)) addToFavoritesUI();
+  else removeFromFavoritesUI();
+
   favBtn.onclick = () => {
     if (favBtn.children[1].id == "fav") {
-      favBtn.children[1].src = "./img/heart-icon.svg";
-      favBtn.children[1].id = "";
+      removeFromFavoritesUI();
+      RemoveFromFavoritesStorage(movie);
     } else {
-      favBtn.children[1].src = "./img/heart-icon-selected.svg";
-      favBtn.children[1].id = "fav";
+      addToFavoritesUI();
+      AddToFavoritesStorage(movie);
     }
   };
+
+  function removeFromFavoritesUI() {
+    favBtn.children[1].src = "./img/heart-icon.svg";
+    favBtn.children[1].id = "";
+  }
+
+  function addToFavoritesUI() {
+    favBtn.children[1].src = "./img/heart-icon-selected.svg";
+    favBtn.children[1].id = "fav";
+  }
 
   function openDetails() {
     window.open(detailsURL + movie.id, "_blank");
