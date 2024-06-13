@@ -92,7 +92,7 @@ function getGenreById(genres, id) {
 
 // Function to generate a card
 function generateCard(i) {
-  const favoriteMoviesCardMarkup = `<div class="flex flex-col rounded-[18px] bg-[#21242D] text-white">
+  const favoriteMoviesCardMarkup = `<div class="movie-card flex flex-col rounded-[18px] bg-[#21242D] text-white">
             <img
               src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${
                 localStorageData[i].poster_path
@@ -128,8 +128,8 @@ function generateCard(i) {
               <!-- Add to List Button + Genre -->
               <div class="flex justify-between items-center">
                 <button
-                  id="add-toList"
-                  class="bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
+                  id=${i}
+                  class="heart-button-filled bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
                 >
                   <img src="img/heart-icon-selected.svg" alt="" width="18px" />
                 </button>
@@ -163,3 +163,30 @@ function generateCard(i) {
 for (let i = 0; i < localStorageData.length; i++) {
   generateCard(i);
 }
+
+// Function to handle heart button click
+function handleHeartButtonClick(event) {
+  const button = event.currentTarget;
+  const movieCard = button.closest(".movie-card");
+  const index = parseInt(movieCard.getAttribute("data-index"), 10);
+
+  // Remove the movie from local storage data
+  localStorageData.splice(index, 1);
+
+  // Update local storage
+  localStorage.setItem("search-favorites", JSON.stringify(localStorageData));
+
+  // Remove the movie card from the DOM
+  favoriteMoviesContainer.removeChild(movieCard);
+
+  // Update the indices of the remaining movie cards
+  document.querySelectorAll(".movie-card").forEach((card, i) => {
+    card.setAttribute("data-index", i);
+  });
+}
+
+// Attach event listeners to heart buttons
+const heartButtons = document.querySelectorAll(".heart-button-filled");
+heartButtons.forEach((button) => {
+  button.addEventListener("click", handleHeartButtonClick);
+});
