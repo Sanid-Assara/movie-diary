@@ -24,7 +24,10 @@ GetGenres();
 // ----Adding and Removing from Favorites using LocalStorage
 let favorites = [];
 const favKey = "search-favorites";
-window.addEventListener("load", () => (favorites = JSON.parse(localStorage.getItem(favKey)) || []));
+window.addEventListener(
+  "load",
+  () => (favorites = JSON.parse(localStorage.getItem(favKey)) || [])
+);
 
 function AddToFavoritesStorage(movie) {
   if (favorites.includes(movie)) return;
@@ -287,7 +290,6 @@ function cardUI(movie) {
   if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "
 
   const card = `
-  <div class="flex flex-col rounded-[18px] bg-[#21242D] text-white">
       <a href="${detailsURL}${movie.id}" target="_blank">
         <img class="rounded-t-[18px] w-full"
         src="${imageURL}${movie.poster_path}"
@@ -320,40 +322,44 @@ function cardUI(movie) {
         </span>
       </div>
       </div>
-  </div>
   `;
 
-  popularMoviesEl.insertAdjacentHTML("beforeend", card);
+  // popularMoviesEl.insertAdjacentHTML("beforeend", card);
 
+  // Add Movie to faorites
   const cardDiv = document.createElement("div");
+
+  cardDiv.classList.add(
+    "flex",
+    "flex-col",
+    "rounded-[18px]",
+    "bg-[#21242D]",
+    "text-white"
+  );
+
   cardDiv.innerHTML = card;
+  popularMoviesEl.appendChild(cardDiv); // to insert inside carDiv the variable card from the top
 
-  const poster = cardDiv.querySelector("img");
-  const toList = cardDiv.querySelector("button");
-  // console.log(toList.children[0]);
+  const toList = cardDiv.querySelector("#add-toList");
+  // console.log(toList);
 
-  cardsContainerEl.appendChild(cardDiv); // to insert inside carDiv the variable card from the top
-
+  // Test with .onclick (yes it works too!)
   toList.onclick = () => {
-    toList.classList.remove("bg-[#00B9AE]"); // Remove mystyle class
-    toList.classList.add("bg-emerald-100"); // Add newone class
+    // const favKey = "popular-favorites"; // the value for kew to show in local storage can be added as a "String" or save in a variable and use his name favKey
+    toList.classList.toggle("bg-amber-400"); // Add newone class
+    const movies = JSON.parse(localStorage.getItem(favKey)) || [];
+
+    movies.push(movie);
+    localStorage.setItem(favKey, JSON.stringify(movies));
   };
-}
 
-// favBtn.onclick = () => {
-//   if (favBtn.children[1].id == "fav") {
-//     favBtn.children[1].src = "./img/heart-icon.svg";
-//     favBtn.children[1].id = "";
-//   } else {
-//     favBtn.children[1].src = "./img/heart-icon-selected.svg";
-//     favBtn.children[1].id = "fav";
-//   }
-// };
+  // Test with .addEventListener (yes it works!)
+  // toList.addEventListener("click", () => {
+  //   toList.classList.toggle("bg-amber-400"); // Add newone class
+  //   const movies = JSON.parse(localStorage.getItem(favKey)) || [];
 
-// // Add product to localStorage
-// export function addToList(movie, key) {
-//   // if there no items then assign an empty array to the variable
-//   const movies = JSON.parse(localStorage.getItem(key)) || [];
-//   movies.push(movie);
-//   localStorage.setItem(key, JSON.stringify(movie));
-// }
+  //   movies.push(movie);
+  //   localStorage.setItem(favKey, JSON.stringify(movies));
+  // });
+  //
+} // end of function cardUI
