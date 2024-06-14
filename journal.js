@@ -100,7 +100,7 @@ const noCardsParagraph = `<p class="text-gray-700 text-lg font-[lato] px-14 py-4
 
 // Function to generate a card
 function generateCard(i) {
-  const favoriteMoviesCardMarkup = `<div class="movie-card flex flex-col rounded-[18px] bg-[#21242D] text-white">
+  const favoriteMoviesCardMarkup = `<div data-index="${i}" class="movie-card flex flex-col rounded-[18px] bg-[#21242D] text-white">
             <img
               src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${
                 localStorageData[i].poster_path
