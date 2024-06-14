@@ -98,11 +98,11 @@ function ProcessSearch(event) {
   searchInput = event.target.value;
   if (searchInput.length > 0) {
     searchImg.classList.add(...highlighted);
-    searchImg.src = "img/search2.svg";
+    searchImg.classList.remove("opacity-50");
     searchImg.onclick = () => GetSearchResults(searchInputEl.value, 1);
   } else {
     searchImg.classList.remove(...highlighted);
-    searchImg.src = "img/search.svg";
+    searchImg.classList.add("opacity-50");
     searchImg.onclick = () => null;
   }
 }
