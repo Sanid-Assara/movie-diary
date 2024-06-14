@@ -179,9 +179,9 @@ function generateCard(i) {
                 </button>
               </div>
               <div
-                class="line-clamp-1 text-center text-xl w-full bg-gray-900 rounded-lg p-1 text-gray-500"
+                class="par line-clamp-1 text-center text-xl w-full bg-gray-900 rounded-lg p-1 text-gray-500"
               >
-                <p>the note will be here</p>
+                
               </div>
             </div>
           </div>`;
@@ -211,7 +211,6 @@ if (localStorageData.length === 0) {
   }
 }
 
-console.log(localStorageData.length);
 // Function to handle heart button click
 function handleHeartButtonClick(event) {
   const button = event.currentTarget;
@@ -242,3 +241,98 @@ const heartButtons = document.querySelectorAll(".heart-button-filled");
 heartButtons.forEach((button) => {
   button.addEventListener("click", handleHeartButtonClick);
 });
+
+// Add Note
+document.addEventListener("DOMContentLoaded", (event) => {
+  const addNoteButtons = document.querySelectorAll(".add-note-btn");
+
+  addNoteButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const movieCard = this.closest(".movie-card");
+      const noteInput = movieCard.querySelector(".note-input");
+      const noteText = noteInput.value;
+      const parDiv = movieCard.querySelector(".par");
+      const imgElement = this.querySelector("img");
+
+      if (noteText.trim()) {
+        // Create a new <p> element
+        const noteElement = document.createElement("p");
+        noteElement.textContent = noteText;
+        parDiv.appendChild(noteElement);
+
+        // Save to local storage
+        saveNoteToLocalStorage(movieCard, noteText);
+
+        // Change button image to remove icon
+        imgElement.src = "img/delete-icon.svg";
+
+        // Add remove functionality
+        this.addEventListener(
+          "click",
+          function () {
+            removeNoteFromLocalStorage(movieCard, noteText);
+            parDiv.removeChild(noteElement);
+            imgElement.src = "img/add-icon.svg"; // Revert to add icon
+            noteInput.value = "";
+          },
+          { once: false }
+        );
+
+        // Clear the input
+        noteInput.value = "";
+      }
+    });
+  });
+
+  // Load notes from local storage on page load
+  loadNotesFromLocalStorage();
+});
+
+function saveNoteToLocalStorage(movieCard, noteText) {
+  const cardIndex = Array.from(
+    document.querySelectorAll(".movie-card")
+  ).indexOf(movieCard);
+  let allNotes = JSON.parse(localStorage.getItem("movieNotes")) || [];
+  allNotes.push({ cardIndex, noteText });
+  localStorage.setItem("movieNotes", JSON.stringify(allNotes));
+}
+
+function removeNoteFromLocalStorage(movieCard, noteText) {
+  const cardIndex = Array.from(
+    document.querySelectorAll(".movie-card")
+  ).indexOf(movieCard);
+  let allNotes = JSON.parse(localStorage.getItem("movieNotes")) || [];
+  allNotes = allNotes.filter(
+    (note) => !(note.cardIndex === cardIndex && note.noteText === noteText)
+  );
+  localStorage.setItem("movieNotes", JSON.stringify(allNotes));
+}
+
+function loadNotesFromLocalStorage() {
+  const allNotes = JSON.parse(localStorage.getItem("movieNotes")) || [];
+  allNotes.forEach((note) => {
+    const movieCard = document.querySelectorAll(".movie-card")[note.cardIndex];
+    if (movieCard) {
+      const parDiv = movieCard.querySelector(".par");
+      const noteElement = document.createElement("p");
+      noteElement.textContent = note.noteText;
+      parDiv.appendChild(noteElement);
+
+      // Set the button image to remove icon
+      const addButton = movieCard.querySelector(".add-note-btn");
+      const imgElement = addButton.querySelector("img");
+      imgElement.src = "img/delete-icon.svg";
+
+      // Add remove functionality
+      addButton.addEventListener(
+        "click",
+        function () {
+          removeNoteFromLocalStorage(movieCard, note.noteText);
+          parDiv.removeChild(noteElement);
+          imgElement.src = "img/add-icon.svg"; // Revert to add icon
+        },
+        { once: true }
+      );
+    }
+  });
+}
