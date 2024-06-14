@@ -96,8 +96,10 @@ function FindParentElement(elementToFind, startingElement) {
 }
 
 function ProcessSearch(event) {
-  const highlighted = ["bg-[#3ae4de50]", "hover:cursor-pointer"];
-  const searchImg = document.getElementById("search-img");
+
+  const highlighted = ["bg-[#3ae4de50]", "hover:cursor-pointer", "hover:bg-[#238a83]"];
+  const searchImg = document.getElementById("search-img-wrapper");
+
   searchInput = event.target.value;
   if (searchInput.length > 0) {
     searchImg.classList.add(...highlighted);
