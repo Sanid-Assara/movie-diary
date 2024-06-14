@@ -284,7 +284,8 @@ function cardUI(movie) {
   // console.log(movie);
 
   let genre = "";
-  for (let genreId of movie.genre_ids) genre += movieGenres.find((x) => x.id === genreId).name + ", ";
+  for (let genreId of movie.genre_ids)
+    genre += movieGenres.find((x) => x.id === genreId).name + ", ";
   // console.log(genre);
   if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "
 
@@ -301,7 +302,11 @@ function cardUI(movie) {
         }</p>
         <div class="flex justify-between mb-4">
           <span class="text-md">
-            ${movie.release_date.length > 0 ? movie.release_date.slice(0, -6) : ""}
+            ${
+              movie.release_date.length > 0
+                ? movie.release_date.slice(0, -6)
+                : ""
+            }
           </span>
           <span class="flex font-semibold text-sm text-center">
             <img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2"/>
@@ -338,23 +343,41 @@ function cardUI(movie) {
   const toList = cardDiv.querySelector("#add-toList");
   // console.log(toList);
 
-  // Test with .onclick (yes it works too!)
-  toList.onclick = () => {
-    // const favKey = "popular-favorites"; // the value for kew to show in local storage can be added as a "String" or save in a variable and use his name favKey
-    toList.classList.toggle("bg-amber-400"); // Add newone class
-    const movies = JSON.parse(localStorage.getItem(favKey)) || [];
+  // actions
 
-    movies.push(movie);
-    localStorage.setItem(favKey, JSON.stringify(movies));
+  if (IsFavorite(movie)) addToFavoritesUI();
+  else removeFromFavoritesUI();
+
+  toList.onclick = () => {
+    if (toList.children[0].id == "fav") {
+      removeFromFavoritesUI();
+      RemoveFromFavoritesStorage(movie);
+    } else {
+      addToFavoritesUI();
+      AddToFavoritesStorage(movie);
+    }
   };
 
-  // Test with .addEventListener (yes it works!)
-  // toList.addEventListener("click", () => {
+  function removeFromFavoritesUI() {
+    toList.className.add = "bg-[#00B9AE]";
+    toList.children[0].src = "./img/heart-icon.svg";
+    toList.children[0].id = "";
+  }
+
+  function addToFavoritesUI() {
+    // toList.classList.toggle("bg-amber-400");
+    toList.className.remove = "bg-[#00B9AE]";
+    toList.className.add = "bg-amber-400";
+    toList.children[0].src = "./img/heart-icon-selected.svg";
+    toList.children[0].id = "fav";
+  }
+
+  // toList.onclick = () => {
+  //   // const favKey = "popular-favorites"; // the value for kew to show in local storage can be added as a "String" or save in a variable and use his name favKey
   //   toList.classList.toggle("bg-amber-400"); // Add newone class
   //   const movies = JSON.parse(localStorage.getItem(favKey)) || [];
 
   //   movies.push(movie);
   //   localStorage.setItem(favKey, JSON.stringify(movies));
-  // });
-  //
+  // };
 } // end of function cardUI
