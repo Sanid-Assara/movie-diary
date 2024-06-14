@@ -17,7 +17,11 @@ searchFormEl.addEventListener("submit", SubmitSearch);
 
 document.onclick = (e) => {
   //Closing search results dialog if clicked outside of it
-  if (!FindParentElement(dialogEl, e.target) && dialogEl.open) dialogEl.close();
+
+  if (!FindParentElement(dialogEl, e.target) && dialogEl.open) {
+    dialogEl.close();
+    if (location.pathname.substring(location.pathname.lastIndexOf("/") + 1) == "journal.html") location.reload();
+  }
 };
 
 GetGenres(); //API call to get the genres from the server
