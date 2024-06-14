@@ -162,18 +162,18 @@ function generateCard(i) {
             </div>
             <!-- Add A Note Section -->
             <div
-              class="flex flex-col gap-2 items-center justify-center w-full px-2 mb-4"
+              class="flex flex-col flex-1 gap-2 items-center justify-center w-full px-2 mb-4"
             >
               <div class="flex justify-center items-center gap-2 w-full mb-1">
                 <form class="flex justify-center items-center w-full">
                   <input
                     type="text"
-                    class="note-input appearance-none w-full bg-gray-900 text-gray-700 border-gray-600 border-2 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-2 focus:border-[#00b9ae]"
+                    class="note-input  appearance-none w-full bg-gray-900 text-[#00b9ae] border-gray-600 border-2 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-gray-800  focus:border-2 focus:border-[#00b9ae]"
                     placeholder="Add a Note..."
                   />
                 </form>
                 <button
-                  class="add-note-btn flex items-center justify-center rounded-xl bg-gray-100 bg-opacity-20 backdrop-blur-l p-3"
+                  class="add-note-btn flex items-center justify-center rounded-xl bg-gray-100 bg-opacity-20 backdrop-blur-l p-3 hover:animate-bounce"
                 >
                   <img src="img/add-icon.svg" alt="Add icon" />
                 </button>
