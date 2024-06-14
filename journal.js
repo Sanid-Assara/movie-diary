@@ -160,16 +160,29 @@ function generateCard(i) {
                 )}</span>
               </div>
             </div>
-            <!-- Add A Note Button -->
-            <div class="flex items-center justify-center w-full px-4 mb-4">
-              <button
-                class="flex items-center text-wrap justify-center gap-4 rounded-2xl w-full bg-gray-100 bg-opacity-20 backdrop-blur-l px-10 py-2"
+            <!-- Add A Note Section -->
+            <div
+              class="flex flex-col gap-2 items-center justify-center w-full px-2 mb-4"
+            >
+              <div class="flex justify-center items-center gap-2 w-full mb-1">
+                <form class="flex justify-center items-center w-full">
+                  <input
+                    type="text"
+                    class="note-input appearance-none w-full bg-gray-900 text-gray-700 border-gray-600 border-2 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-2 focus:border-[#00b9ae]"
+                    placeholder="Add a Note..."
+                  />
+                </form>
+                <button
+                  class="add-note-btn flex items-center justify-center rounded-xl bg-gray-100 bg-opacity-20 backdrop-blur-l p-3"
+                >
+                  <img src="img/add-icon.svg" alt="Add icon" />
+                </button>
+              </div>
+              <div
+                class="line-clamp-1 text-center text-xl w-full bg-gray-900 rounded-lg p-1 text-gray-500"
               >
-                <img src="img/add-icon.svg" alt="Add icon" />
-                <p class="text-base font-bold font-[lato] text-[#F9F9F9]">
-                  Add a note
-                </p>
-              </button>
+                <p>the note will be here</p>
+              </div>
             </div>
           </div>`;
 
