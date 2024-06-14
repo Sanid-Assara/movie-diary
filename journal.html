@@ -61,22 +61,34 @@
       </div>
     </header>
 
-    <dialog close id="search-dialog" class="border-[#00b9ae] border-2 border-opacity-50 mx-auto max-w-[1000px] container py-4 bg-[#21242d] text-[white] px-4">
+    <dialog
+      close
+      id="search-dialog"
+      class="border-[#00b9ae] border-2 border-opacity-50 mx-auto max-w-[1000px] container py-4 bg-[#21242d] text-[white] px-4"
+    >
       <div class="flex justify-between items-center gap-1 mb-4 flex-wrap">
         <div>
-          <p id="search-keyword" class="text-xl">Search results for: "Terminator"</p>
+          <p id="search-keyword" class="text-xl">
+            Search results for: "Terminator"
+          </p>
           <div class="flex gap-3 items-center">
-
             <p id="search-found">Found: 450</p>
             <p id="search-total-pages" class="ml-0">Total Pages: 34</p>
           </div>
         </div>
-        
-        <div class="flex gap-3 flex-wrap justify-center w-fit items-center">
-          <button id="search-prev" class="bg-[#00b9ae] rounded px-2 py-1 h-fit font-extrabold text-2xl text-[#21242d] hover:bg-[#8ffdf6]"><</button>
-          <div id="search-pages" class="h-fit"></div>
-          <button id="search-next" class="bg-[#00b9ae] rounded px-2 py-1 h-fit font-extrabold text-2xl text-[#21242d] hover:bg-[#8ffdf6]">></button>
 
+        <div class="flex gap-3 flex-wrap justify-center w-fit items-center">
+          <button
+            id="search-prev"
+            class="bg-[#00b9ae] rounded px-2 py-1 h-fit font-extrabold text-2xl text-[#21242d] hover:bg-[#8ffdf6]"
+          ></button>
+          <div id="search-pages" class="h-fit"></div>
+          <button
+            id="search-next"
+            class="bg-[#00b9ae] rounded px-2 py-1 h-fit font-extrabold text-2xl text-[#21242d] hover:bg-[#8ffdf6]"
+          >
+            >
+          </button>
         </div>
       </div>
       <div
@@ -86,13 +98,13 @@
     </dialog>
 
     <main>
-      <section>
+      <section class="mx-auto max-w-[1120px] container py-12">
         <h1 class="font-bold text-5xl text-center mt-6 py-4 text-white">
           Your Favorite Movies
         </h1>
         <div
           id="favorite-movies-container"
-          class="grid grid-cols-1 px-16 py-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
+          class="grid grid-cols-1 py-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
         >
           <!-- Cards or Paragraph will be added here-->
         </div>
