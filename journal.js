@@ -1,11 +1,13 @@
 // Retrieve the array of favorite movies from local storage
-const localStorageData = JSON.parse(localStorage.getItem("search-favorites"));
+
+const localStorageData =
+  JSON.parse(localStorage.getItem("search-favorites")) || [];
 
 const favoriteMoviesContainer = document.querySelector(
   "#favorite-movies-container"
 );
 
-// Function to convert genre id to genre name
+// Function to convert genre ids to genre name
 const genres = [
   {
     id: 28,
@@ -84,9 +86,11 @@ const genres = [
     name: "Western",
   },
 ];
-function getGenreById(genres, id) {
-  const genre = genres.find((genre) => genre.id === id);
-  return genre ? genre.name : "Not Specified";
+function getGenreByIds(genres, ids) {
+  return genres
+    .filter((genre) => ids.includes(genre.id))
+    .map((genre) => genre.name)
+    .join(", ");
 }
 
 //No cards Markup
@@ -115,7 +119,7 @@ function generateCard(i) {
                 <span class="text-md">${
                   localStorageData[i].release_date.length > 0
                     ? localStorageData[i].release_date.slice(0, -6)
-                    : ""
+                    : "Unknown"
                 }</span>
                 <span
                   class="flex items-center font-semibold text-sm text-center"
@@ -130,30 +134,55 @@ function generateCard(i) {
                 </span>
               </div>
               <!-- Add to List Button + Genre -->
-              <div class="flex justify-between items-center">
+              <div class="flex justify-between items-center min-h-10">
                 <button
-                  id=${i}
-                  class="heart-button-filled bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
-                >
-                  <img src="img/heart-icon-selected.svg" alt="" width="18px" />
-                </button>
+                id="${i}"
+                class="heart-button-filled group bg-[#00B9AE] rounded-full font-bold p-2 mr-1 hover:animate-bounce"
+              >
+                <!-- Default Icon -->
+                <img
+                  src="./img/heart-icon-selected.svg"
+                  alt="Default Icon"
+                  class="block group-hover:hidden"
+                />
 
-                <span class="font-semibold text-sm text-right">${getGenreById(
+                <!-- Hover Icon -->
+                <img
+                  src="./img/heart-icon.svg"
+                  alt="Hover Icon"
+                  class="hidden group-hover:block"
+                />
+              </button>
+
+                <span class="font-semibold text-sm text-right  text-[#00b9ae] max-w-44">${getGenreByIds(
                   genres,
-                  localStorageData[i].genre_ids[0]
+                  localStorageData[i].genre_ids
                 )}</span>
               </div>
             </div>
-            <!-- Add A Note Button -->
-            <div class="flex items-center justify-center w-full px-4 mb-4">
-              <button
-                class="flex items-center text-wrap justify-center gap-4 rounded-2xl w-full bg-gray-100 bg-opacity-20 backdrop-blur-l px-10 py-2"
+            <!-- Add A Note Section -->
+            <div
+              class="flex flex-col gap-2 items-center justify-center w-full px-2 mb-4"
+            >
+              <div class="flex justify-center items-center gap-2 w-full mb-1">
+                <form class="flex justify-center items-center w-full">
+                  <input
+                    type="text"
+                    class="note-input appearance-none w-full bg-gray-900 text-gray-700 border-gray-600 border-2 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-2 focus:border-[#00b9ae]"
+                    placeholder="Add a Note..."
+                  />
+                </form>
+                <button
+                  class="add-note-btn flex items-center justify-center rounded-xl bg-gray-100 bg-opacity-20 backdrop-blur-l p-3"
+                >
+                  <img src="img/add-icon.svg" alt="Add icon" />
+                </button>
+              </div>
+              <div
+                class="line-clamp-1 text-center text-xl w-full bg-gray-900 rounded-lg p-1 text-gray-500"
               >
-                <img src="img/add-icon.svg" alt="Add icon" />
-                <p class="text-base font-bold font-[lato] text-[#F9F9F9]">
-                  Add a note
-                </p>
-              </button>
+                <p>the note will be here</p>
+              </div>
             </div>
           </div>`;
 
@@ -163,8 +192,7 @@ function generateCard(i) {
   );
 }
 
-// Loop over the localStorage array
-if (localStorageData.length === 0) {
+function displayNoCards() {
   favoriteMoviesContainer.insertAdjacentHTML("beforeend", noCardsParagraph);
   favoriteMoviesContainer.className = "";
   favoriteMoviesContainer.classList.add(
@@ -172,12 +200,18 @@ if (localStorageData.length === 0) {
     "items-center",
     "justify-center"
   );
-} else {
+}
+
+if (localStorageData.length === 0) {
+  displayNoCards();
+} else if (localStorageData.length > 0) {
+  // Loop over the localStorage array
   for (let i = 0; i < localStorageData.length; i++) {
     generateCard(i);
   }
 }
 
+console.log(localStorageData.length);
 // Function to handle heart button click
 function handleHeartButtonClick(event) {
   const button = event.currentTarget;
