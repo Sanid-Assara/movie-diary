@@ -20,11 +20,7 @@ document.onclick = (e) => {
 
   if (!FindParentElement(dialogEl, e.target) && dialogEl.open) {
     dialogEl.close();
-    if (
-      location.pathname.substring(location.pathname.lastIndexOf("/") + 1) ==
-      "journal.html"
-    )
-      location.reload();
+    if (location.pathname.substring(location.pathname.lastIndexOf("/") + 1) == "journal.html") location.reload();
   }
 };
 
@@ -33,10 +29,7 @@ GetGenres(); //API call to get the genres from the server
 // ----Adding and Removing from Favorites using LocalStorage
 let favorites = [];
 const favKey = "search-favorites";
-window.addEventListener(
-  "load",
-  () => (favorites = JSON.parse(localStorage.getItem(favKey)) || [])
-);
+window.addEventListener("load", () => (favorites = JSON.parse(localStorage.getItem(favKey)) || []));
 
 function AddToFavoritesStorage(movie) {
   if (favorites.includes(movie)) return;
@@ -102,11 +95,7 @@ function FindParentElement(elementToFind, startingElement) {
 }
 
 function ProcessSearch(event) {
-  const highlighted = [
-    "bg-[#3ae4de50]",
-    "hover:cursor-pointer",
-    "hover:bg-[#238a83]",
-  ];
+  const highlighted = ["bg-[#3ae4de50]", "hover:cursor-pointer", "hover:bg-[#238a83]"];
   const searchImg = document.getElementById("search-img-wrapper");
 
   searchInput = event.target.value;
@@ -133,7 +122,6 @@ function ProcessSearchResults(data) {
   dialogEl.show();
   const searchKeyEl = document.getElementById("search-keyword");
   const searchFoundEl = document.getElementById("search-found");
-  const searchCurPageEl = document.getElementById("search-current-page");
   const searchTotalPageEl = document.getElementById("search-total-pages");
   const prevBtn = document.getElementById("search-prev");
   const nextBtn = document.getElementById("search-next");
@@ -163,16 +151,14 @@ function ProcessSearchResults(data) {
 
     if (data.total_pages > 1 && data.page < data.total_pages) {
       nextBtn.classList.remove("hidden");
-      nextBtn.onclick = () =>
-        GetSearchResults(searchInputEl.value, data.page + 1);
+      nextBtn.onclick = () => GetSearchResults(searchInputEl.value, data.page + 1);
     } else nextBtn.classList.add("hidden");
 
     if (data.page === 1) {
       prevBtn.classList.add("hidden");
     } else {
       prevBtn.classList.remove("hidden");
-      prevBtn.onclick = () =>
-        GetSearchResults(searchInputEl.value, data.page - 1);
+      prevBtn.onclick = () => GetSearchResults(searchInputEl.value, data.page - 1);
     }
 
     for (let i = 0; i < resultsPage.length; i++) {
@@ -182,7 +168,6 @@ function ProcessSearchResults(data) {
     //Nothing found
     searchKeyEl.innerText = `Search results for: "${searchInput}"`;
     searchFoundEl.innerText = "Nothing found";
-    searchCurPageEl.innerText = "";
     searchTotalPageEl.innerText = "";
     nextBtn.classList.add("hidden");
     prevBtn.classList.add("hidden");
@@ -190,8 +175,7 @@ function ProcessSearchResults(data) {
 
   function processPages(pageNum) {
     const pageBtn = document.createElement("Button");
-    pageBtn.className =
-      "bg-[#00b9ae] hover:bg-[#8ffdf6] mx-1 h-full px-2 py-1h-fit font-extrabold text-1xl text-[#21242d] rounded";
+    pageBtn.className = "bg-[#00b9ae] hover:bg-[#8ffdf6] mx-1 h-full px-2 py-1h-fit font-extrabold text-1xl text-[#21242d] rounded";
     pageBtn.onclick = () => GetSearchResults(searchInputEl.value, pageNum);
     pageBtn.textContent = pageNum;
     if (data.page === pageNum) {
@@ -203,15 +187,13 @@ function ProcessSearchResults(data) {
 }
 
 function clearChildren(element) {
-  while (element.lastElementChild)
-    element.removeChild(element.lastElementChild);
+  while (element.lastElementChild) element.removeChild(element.lastElementChild);
 }
 
 function ShowSearchResultCardUI(movie) {
   const imageURL = `https://image.tmdb.org/t/p/w300/${movie.poster_path}`;
   let genre = "";
-  for (let genreId of movie.genre_ids)
-    genre += movieGenres.find((x) => x.id === genreId).name + ", ";
+  for (let genreId of movie.genre_ids) genre += movieGenres.find((x) => x.id === genreId).name + ", ";
   if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "
 
   const searchCardMarkup = `
@@ -224,9 +206,7 @@ function ShowSearchResultCardUI(movie) {
        ${movie.title}</p>
       <div class="flex justify-start gap-6 items-center">
         <p class="text-md">
-         ${
-           movie.release_date.length > 0 ? movie.release_date.slice(0, -6) : ""
-         }</p>
+         ${movie.release_date.length > 0 ? movie.release_date.slice(0, -6) : ""}</p>
         <span class="flex font-semibold text-sm text-center">
         <img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2"/>
          ${movie.vote_average.toFixed(1)}</span>
@@ -322,8 +302,7 @@ function cardUI(movie) {
   // console.log(movie);
 
   let genre = "";
-  for (let genreId of movie.genre_ids)
-    genre += movieGenres.find((x) => x.id === genreId).name + ", ";
+  for (let genreId of movie.genre_ids) genre += movieGenres.find((x) => x.id === genreId).name + ", ";
   // console.log(genre);
   if (genre.length > 0) genre = genre.slice(0, -2); //remove last ", "
 
@@ -335,16 +314,10 @@ function cardUI(movie) {
         />
       </a>
       <div class="py-4 px-2">
-        <p id="movie-title" class="font-bold text-xl line-clamp-1 mb-2">${
-          movie.title
-        }</p>
+        <p id="movie-title" class="font-bold text-xl line-clamp-1 mb-2">${movie.title}</p>
         <div class="flex justify-between mb-4">
           <span class="text-md">
-            ${
-              movie.release_date.length > 0
-                ? movie.release_date.slice(0, -6)
-                : ""
-            }
+            ${movie.release_date.length > 0 ? movie.release_date.slice(0, -6) : ""}
           </span>
           <span class="flex font-semibold text-sm text-center">
             <img src="img/star-icon.svg" alt="star" width="16px" class="flex mr-2"/>
@@ -367,13 +340,7 @@ function cardUI(movie) {
   // Add Movie to faorites
   const cardDiv = document.createElement("div");
 
-  cardDiv.classList.add(
-    "flex",
-    "flex-col",
-    "rounded-[18px]",
-    "bg-[#21242D]",
-    "text-white"
-  );
+  cardDiv.classList.add("flex", "flex-col", "rounded-[18px]", "bg-[#21242D]", "text-white");
 
   cardDiv.innerHTML = card;
   popularMoviesEl.appendChild(cardDiv); // to insert inside carDiv the variable card from the top
